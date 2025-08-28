@@ -6,10 +6,15 @@ require('dotenv').config();
 
 const app = express();
 
-// ✅ CORS setup
+// ✅ CORS setup (safe)
+const clientUrl = process.env.CLIENT_URL?.trim(); // remove extra spaces/newlines
+if (!clientUrl) {
+  console.warn("CLIENT_URL is not defined! Allowing all origins temporarily.");
+}
+
 app.use(cors({
-  origin: process.env.CLIENT_URL,   // allow only your frontend
-  credentials: true                 // allow cookies & auth headers
+  origin: clientUrl || "*",  // allow your frontend or all for safety
+  credentials: true
 }));
 
 app.use(express.json());
